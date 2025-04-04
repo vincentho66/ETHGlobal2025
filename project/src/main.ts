@@ -13,9 +13,9 @@ connectButton.addEventListener("click", async () => {
       walletAddress.innerText = `Wallet Address: ${address}`;
     } catch (err: any) {
       console.error("Connection failed:", err);
-      walletAddress.innerText = "❌ Wallet connection failed";
+      walletAddress.innerText = "Wallet connection failed";
     }
   } else {
-    walletAddress.innerText = "⚠️ Please install MetaMask first.";
+    walletAddress.innerText = "Please install MetaMask first.";
   }
 });
