@@ -16,6 +16,6 @@ connectButton.addEventListener("click", async () => {
       walletAddress.innerText = "Wallet connection failed";
     }
   } else {
-    walletAddress.innerText = "Please install MetaMask first.";
+    walletAddress.innerText = "Please install MetaMask first";
   }
 });
