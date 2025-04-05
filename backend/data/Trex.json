@@ -1,0 +1,10 @@
+{
+    "risk_level": "high",
+    "horizon": "short",
+    "management_style": "active",
+    "themes": ["defi", "meme", "l2"],
+    "exclusions": ["stablecoin"],
+    "experience": "expert",
+    "notes": "I want fast-moving DeFi positions with maximum upside. Happy to rebalance daily if needed."
+  } 
+  

@@ -1,0 +1,10 @@
+{
+    "risk_level": "medium",
+    "horizon": "long",
+    "management_style": "passive",
+    "themes": ["eth", "defi"],
+    "exclusions": ["meme"],
+    "experience": "intermediate",
+    "notes": "Prefer steady growth. Not into hype coins. OK with DeFi, but prefer trusted protocols."
+  }
+  
