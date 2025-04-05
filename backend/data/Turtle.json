@@ -1,0 +1,10 @@
+{
+    "risk_level": "low",
+    "horizon": "long",
+    "management_style": "passive",
+    "themes": ["stablecoin", "rwa"],
+    "exclusions": ["volatile", "meme"],
+    "experience": "beginner",
+    "notes": "Looking for yield on stablecoins or real-world assets. Not interested in speculation."
+  }
+  
