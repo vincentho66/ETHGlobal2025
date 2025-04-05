@@ -5,3 +5,6 @@ backend/lib/
 backend/lib64/
 backend/pyvenv.cfg
 backend/share/
+.vscode/
+notebook/
+.env
