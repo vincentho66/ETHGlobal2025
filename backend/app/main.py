@@ -86,6 +86,9 @@ def get_price_df(symbols: str, period: str, limit: int) -> pd.DataFrame:
         df_merged = df_merged.merge(df, on="time", how="inner")
     return df_merged
 
+def base64_to_link(image_base64):
+    return f"data:image/png;base64,{image_base64}"
+
 def generate_candlestick_base64(json_data: str) -> str:
     # Step 1: Parse JSON string
     ohlc_list = json.loads(json_data)
@@ -125,7 +128,85 @@ def generate_candlestick_base64(json_data: str) -> str:
     image_base64 = base64.b64encode(buf.read()).decode('utf-8')
     buf.close()
 
-    return f"data:image/png;base64,{image_base64}"
+    return image_base64
+
+def generate_multiline_chart_base64(json_data: str) -> str:
+    data = json.loads(json_data)
+    df = pd.DataFrame(data)
+    df['time'] = pd.to_datetime(df['time'], unit='ms')
+    df.set_index('time', inplace=True)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    gray_palette = ['#666666', '#888888', '#AAAAAA', '#BBBBBB']
+    for idx, column in enumerate(df.columns):
+        color = gray_palette[idx % len(gray_palette)]
+        ax.plot(df.index, df[column], label=column, color=color)
+
+    ax.set_ylabel("Price")
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    fig.autofmt_xdate()
+    ax.legend()
+
+    buf = BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+    return image_base64
+
+def generate_price_and_equity_chart_base64(
+    token_json_data: str,
+    equity_curve: list[float],
+    equity_timestamps: list[int]
+) -> str:
+    # Token prices
+    token_data = json.loads(token_json_data)
+    df_token = pd.DataFrame(token_data)
+    df_token['time'] = pd.to_datetime(df_token['time'], unit='ms')
+    df_token.set_index('time', inplace=True)
+
+    # Equity curve (shorter)
+    df_equity = pd.DataFrame({
+        'time': pd.to_datetime(equity_timestamps, unit='ms'),
+        'equity': equity_curve
+    }).set_index('time')
+
+    # Plot
+    fig, ax = plt.subplots(figsize=(10, 5))
+    gray_palette = ['#666666', '#888888', '#AAAAAA', '#BBBBBB']
+
+    # Plot token lines
+    for idx, column in enumerate(df_token.columns):
+        color = gray_palette[idx % len(gray_palette)]
+        ax.plot(df_token.index, df_token[column], label=column, color=color, linewidth=2)
+
+    # Plot equity curve (may start later)
+    ax.plot(df_equity.index, df_equity['equity'],
+            label='Equity Curve',
+            color='skyblue',
+            linewidth=3)
+
+    # Format chart
+    ax.set_ylabel("Price")
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    fig.autofmt_xdate()
+    ax.legend()
+    ax.grid(True, linestyle='--', alpha=0.3)
+
+    # Export to base64
+    buf = BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+    return image_base64
 
 #####################################################################################
 #####################################################################################
@@ -142,8 +223,8 @@ def get_token_price(
     # return get_token_historical_prices()
     try:
         json_data = get_cached_ohlc(symbol,period,limit)
-
-        return generate_candlestick_base64(json_data)
+        image_base64 = generate_candlestick_base64(json_data)
+        return base64_to_link(image_base64)
     except Exception as e:
         return {"symbol":symbol, "period": period, "limit": limit, "error": str(e)}
 
@@ -156,7 +237,9 @@ def get_overview(
     try:
         df = get_price_df(symbols, period, limit)
         df.iloc[:,1:] = df.iloc[:,1:]/df.iloc[0,1:]
-        return df.to_json(orient="records")
+        json_data = df.to_json(orient="records")
+        image_base64 = generate_multiline_chart_base64(json_data)
+        return base64_to_link(image_base64)
     except Exception as e:
         return {"symbol":symbols, "period": period, "limit": limit, "error": str(e)}
 
@@ -170,12 +253,20 @@ def run_backtest(
         algorithm: Literal["mvo","hrp"] = Query("mvo")
 ):
     try:
-        price_df = get_price_df(symbols, period, limit).set_index('time')
-        time = price_df.index.to_list()
+        df = get_price_df(symbols, period, limit)
+        df.iloc[:,1:] = df.iloc[:,1:]/df.iloc[0,1:]
+        json_data = df.to_json(orient="records")
+
+        price_df = df.set_index('time')
         bt = PfOptBacktest(price_df,lookback, rebalance)
         equity_curve = bt.run(algorithm)
+        time = price_df.index.to_list()[-len(equity_curve):]
+        print(len(equity_curve), len(time))
         performance = _compute_performance_metrics(equity_curve, time)
-        return {"equity_curve": equity_curve.tolist(), "time": time, **performance}
+
+        image_base64 = generate_price_and_equity_chart_base64(json_data, equity_curve.tolist(), time)
+
+        return {"img_link": base64_to_link(image_base64), **performance}
     except Exception as e:
         return {"symbol":symbols, "period": period, "limit": limit, "lookback":lookback, "rebalance":rebalance, "error": str(e)}
 
