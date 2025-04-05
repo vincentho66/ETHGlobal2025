@@ -29,40 +29,38 @@ export interface ApiInputData {
     }
   }
   
-  export async function fetchChartData() {
-    try {
-      // Replace this with your actual API endpoint
-      // const response = await fetch('/api/charts');
-      // const data: ApiResponse = await response.json();
-      // setChartData(data.charts);
+  // New fetchChartData
+  export interface TokenPriceData {
+    time: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+  }
   
-      // Simulate data for now
-      const simulatedData = [
-        {
-          id: "chart1",
-          title: "Chart 1",
-          data: [
-            { x: 1, y: 10 },
-            { x: 2, y: 15 },
-            { x: 3, y: 12 },
-          ],
-        },
-        {
-          id: "chart2",
-          title: "Chart 2",
-          data: [
-            { x: 1, y: 5 },
-            { x: 2, y: 8 },
-            { x: 3, y: 6 },
-          ],
-        },
-        {
-          id: "chart3",
-          title: "Chart 3",
-          data: [], // Empty data example
-        },
-      ];
-      return simulatedData;
+  export async function fetchChartData(
+    symbol: string,
+    period: string,
+    limit: string
+  ): Promise<string> {
+    try {
+      const response = await fetch(
+        `http://192.168.253.51:8000/token_price?symbol=${symbol}&period=${period}&limit=${limit}`
+      );
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${
+            errorData.message || "Unknown error"
+          }`
+        );
+      }
+  
+      const responseText = await response.text(); // Get the response as text
+      const data = responseText; // Parse the string to JSON
+        console.log(data); // Log the parsed data
+      return data;
     } catch (error) {
       console.error("Error fetching chart data:", error);
       throw error;

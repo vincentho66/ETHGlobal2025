@@ -15,9 +15,11 @@ export interface InputFormData {
 
 interface InputFormProps {
   onSubmit: (data: InputFormData) => void;
+  onPeriodChange: (period: string) => void;
+  onLimitChange: (limit: string) => void;
 }
 
-export function InputForm({ onSubmit }: InputFormProps) {
+export function InputForm({ onSubmit, onPeriodChange, onLimitChange }: InputFormProps) {
   const [formData, setFormData] = useState<InputFormData>({
     period: "D",
     limit: "100",
@@ -34,6 +36,12 @@ export function InputForm({ onSubmit }: InputFormProps) {
       ...prevData,
       [key]: value,
     }));
+    if (key === "period") {
+      onPeriodChange(value);
+    }
+    if (key === "limit") {
+      onLimitChange(value);
+    }
   };
 
   const handleStartClick = () => {
