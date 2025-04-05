@@ -7,4 +7,4 @@ backend/pyvenv.cfg
 backend/share/
 .vscode/
 notebook/
-.env
+backend/.env

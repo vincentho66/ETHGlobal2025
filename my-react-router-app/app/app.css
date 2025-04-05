@@ -126,3 +126,8 @@ body {
 .chat-open-button {
   @apply fixed bottom-8 right-8 z-50 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
 }
+
+/* InputForm Styles */
+.input-form-container {
+  @apply p-6 bg-white rounded-lg shadow-md;
+}

@@ -1,5 +1,6 @@
 // app/hooks/useChartData.ts
 import { useState, useEffect } from "react";
+import { fetchChartData } from "../services/api";
 
 // Placeholder for chart data type
 export interface ChartData {
@@ -8,61 +9,29 @@ export interface ChartData {
   data: any[]; // Replace 'any' with your actual data structure
 }
 
-// Placeholder for API response type
-interface ApiResponse {
-  charts: ChartData[];
-}
-
 export function useChartData() {
   const [chartData, setChartData] = useState<ChartData[] | null>(null);
   const [activeChart, setActiveChart] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchChartData = async () => {
+    const loadChartData = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        // Replace this with your actual API endpoint
-        // const response = await fetch('/api/charts');
-        // const data: ApiResponse = await response.json();
-        // setChartData(data.charts);
-
-        // Simulate data for now
-        const simulatedData: ApiResponse = {
-          charts: [
-            {
-              id: "chart1",
-              title: "Chart 1",
-              data: [
-                { x: 1, y: 10 },
-                { x: 2, y: 15 },
-                { x: 3, y: 12 },
-              ],
-            },
-            {
-              id: "chart2",
-              title: "Chart 2",
-              data: [
-                { x: 1, y: 5 },
-                { x: 2, y: 8 },
-                { x: 3, y: 6 },
-              ],
-            },
-            {
-              id: "chart3",
-              title: "Chart 3",
-              data: [], // Empty data example
-            },
-          ],
-        };
-        setChartData(simulatedData.charts);
-        setActiveChart("chart1"); // Set the default active chart
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-        setChartData([]); // Set to empty array on error
+        const data = await fetchChartData();
+        setChartData(data);
+        setActiveChart(data[0]?.id || null);
+      } catch (err) {
+        setError("Failed to load chart data.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchChartData();
+    loadChartData();
   }, []);
 
-  return { chartData, activeChart, setActiveChart };
+  return { chartData, activeChart, setActiveChart, isLoading, error };
 }

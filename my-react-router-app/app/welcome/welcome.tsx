@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
 import { useChartData } from "../hooks/useChartData";
-import { useButtonData } from "../hooks/useButtonData";
 import { useDropdownData } from "../hooks/useDropdownData";
 import { useChatModal } from "../hooks/useChatModal";
+import { InputForm } from "../components/InputForm";
+import type { InputFormData } from "../components/InputForm";
+import { fetchData } from "../services/api";
+import type { ApiInputData } from "../services/api";
 
 declare global {
   interface Window {
@@ -14,8 +16,13 @@ declare global {
 export function Welcome() {
   const [account, setAccount] = useState<string | null>(null);
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
-  const { chartData, activeChart, setActiveChart } = useChartData();
-  const { buttonData } = useButtonData();
+  const {
+    chartData,
+    activeChart,
+    setActiveChart,
+    isLoading: isChartLoading,
+    error: chartError,
+  } = useChartData();
   const {
     dropdownData,
     dropdown1Value,
@@ -31,14 +38,15 @@ export function Welcome() {
     newMessage,
     handleNewMessageChange,
     sendMessage,
-    isLoading,
+    isLoading: isChatLoading,
   } = useChatModal();
+  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // Check if MetaMask is installed
-    if (typeof window.ethereum !== "undefined") {
-      setIsMetaMaskInstalled(true);
-    }
+    setIsMetaMaskInstalled(typeof window.ethereum !== "undefined");
   }, []);
 
   const connectWallet = async () => {
@@ -59,10 +67,17 @@ export function Welcome() {
     setActiveChart(chartId);
   };
 
-  const handleButtonClick = (buttonId: string) => {
-    // Handle button click logic here (e.g., fetch more data, update state)
-    console.log(`Button ${buttonId} clicked!`);
-    // You can add more specific actions based on the button ID here
+  const handleStart = async (inputData: InputFormData) => {
+    setIsApiLoading(true);
+    setApiError(null);
+    try {
+      const data = await fetchData(inputData as ApiInputData);
+      setApiResponse(data);
+    } catch (error) {
+      setApiError("Failed to fetch data from API.");
+    } finally {
+      setIsApiLoading(false);
+    }
   };
 
   return (
@@ -135,11 +150,17 @@ export function Welcome() {
             {/* Chart Area */}
             <div className="welcome-chart-area">
               <div className="welcome-chart-content">
-                {chartData === null ? (
+                {isChartLoading ? (
                   <div className="h-full flex items-center justify-center">
                     <p className="text-center">Loading charts...</p>
                   </div>
-                ) : chartData.length === 0 ? (
+                ) : chartError ? (
+                  <div className="h-full flex items-center justify-center">
+                    <p className="text-center text-red-500">
+                      {chartError}
+                    </p>
+                  </div>
+                ) : chartData?.length === 0 ? (
                   <div className="h-full flex items-center justify-center">
                     <p className="text-center">No chart data available.</p>
                   </div>
@@ -147,7 +168,7 @@ export function Welcome() {
                   <>
                     {/* Tab Navigation */}
                     <div className="welcome-chart-tab-container">
-                      {chartData.map((chart) => (
+                      {chartData?.map((chart) => (
                         <button
                           key={chart.id}
                           onClick={() => handleTabClick(chart.id)}
@@ -164,7 +185,7 @@ export function Welcome() {
 
                     {/* Chart Display Area */}
                     <div className="welcome-chart-display">
-                      {chartData.map((chart) => {
+                      {chartData?.map((chart) => {
                         if (chart.id === activeChart) {
                           return (
                             <div key={chart.id} className="h-full">
@@ -193,27 +214,17 @@ export function Welcome() {
                 )}
               </div>
             </div>
-
-            {/* Button Column */}
-            <div className="welcome-button-column">
-              {buttonData === null ? (
-                <p>Loading buttons...</p>
-              ) : buttonData.length === 0 ? (
-                <p>No button data available.</p>
-              ) : (
-                buttonData.map((button) => (
-                  <button
-                    key={button.id}
-                    onClick={() => handleButtonClick(button.id)}
-                    className="welcome-button"
-                  >
-                    {button.label}: {button.value}
-                  </button>
-                ))
-              )}
-            </div>
           </div>
         </div>
+        {/* Input Form */}
+        <InputForm onSubmit={handleStart} />
+        {isApiLoading && <p>Loading API data...</p>}
+        {apiError && <p className="text-red-500">{apiError}</p>}
+        {apiResponse && (
+          <pre>
+            <code>{JSON.stringify(apiResponse, null, 2)}</code>
+          </pre>
+        )}
       </div>
       {/* Chat Modal */}
       {isChatOpen && (
@@ -250,7 +261,7 @@ export function Welcome() {
                 {message.content}
               </div>
             ))}
-            {isLoading && (
+            {isChatLoading && (
               <div className="chat-message chat-message-assistant">
                 Loading...
               </div>
