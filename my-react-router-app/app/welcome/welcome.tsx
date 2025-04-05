@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { useChartData } from "../hooks/useChartData";
 import { useButtonData } from "../hooks/useButtonData";
 import { useDropdownData } from "../hooks/useDropdownData";
+import { useChatModal } from "../hooks/useChatModal";
 
 declare global {
   interface Window {
@@ -22,6 +23,16 @@ export function Welcome() {
     handleDropdown1Change,
     handleDropdown2Change,
   } = useDropdownData();
+  const {
+    isChatOpen,
+    openChat,
+    closeChat,
+    messages,
+    newMessage,
+    handleNewMessageChange,
+    sendMessage,
+    isLoading,
+  } = useChatModal();
 
   useEffect(() => {
     // Check if MetaMask is installed
@@ -204,6 +215,67 @@ export function Welcome() {
           </div>
         </div>
       </div>
+      {/* Chat Modal */}
+      {isChatOpen && (
+        <div className="chat-modal">
+          <div className="chat-header">
+            <h3 className="font-bold">AI Assistant</h3>
+            <button onClick={closeChat}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div className="chat-body">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`chat-message ${
+                  message.role === "user"
+                    ? "chat-message-user"
+                    : "chat-message-assistant"
+                }`}
+              >
+                {message.content}
+              </div>
+            ))}
+            {isLoading && (
+              <div className="chat-message chat-message-assistant">
+                Loading...
+              </div>
+            )}
+          </div>
+          <div className="chat-footer">
+            <textarea
+              className="chat-input"
+              value={newMessage}
+              onChange={handleNewMessageChange}
+              placeholder="Type your message..."
+            />
+            <button className="chat-send-button" onClick={sendMessage}>
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Chat Open Button */}
+      {!isChatOpen && (
+        <button className="chat-open-button" onClick={openChat}>
+          💬 {/* Chat Bubble Emoji */}
+        </button>
+      )}
     </main>
   );
 }

@@ -85,3 +85,44 @@ body {
 .welcome-button-column {
   @apply flex flex-col gap-4 md:w-1/4; /* Take up 1/4 width on medium and up */
 }
+
+/* Chat Modal Styles */
+.chat-modal {
+  @apply fixed bottom-8 right-8 z-50 w-96 bg-white rounded-lg shadow-lg flex flex-col;
+}
+
+.chat-header {
+  @apply p-4 border-b border-gray-300 flex items-center justify-between;
+}
+
+.chat-body {
+  @apply p-4 flex-grow overflow-y-auto;
+}
+
+.chat-message {
+  @apply mb-2 p-2 rounded-lg;
+}
+
+.chat-message-user {
+  @apply bg-blue-100 text-right;
+}
+
+.chat-message-assistant {
+  @apply bg-gray-100 text-left;
+}
+
+.chat-footer {
+  @apply p-4 border-t border-gray-300 flex;
+}
+
+.chat-input {
+  @apply flex-grow border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.chat-send-button {
+  @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.chat-open-button {
+  @apply fixed bottom-8 right-8 z-50 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
