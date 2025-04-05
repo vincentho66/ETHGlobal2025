@@ -5,8 +5,17 @@ from typing import Literal, List, Optional
 import pandas as pd
 import os
 import json
+import base64
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.ticker as mticker
+from matplotlib.patches import Rectangle
+import matplotlib
+matplotlib.use('Agg')
+
 from pydantic import BaseModel
-from io import StringIO
+from io import StringIO, BytesIO
 from backend.oneinch.getters import get_token_historical_prices
 from backend.backtest.pfopt import PfOptBacktest, _compute_performance_metrics
 
@@ -77,6 +86,47 @@ def get_price_df(symbols: str, period: str, limit: int) -> pd.DataFrame:
         df_merged = df_merged.merge(df, on="time", how="inner")
     return df_merged
 
+def generate_candlestick_base64(json_data: str) -> str:
+    # Step 1: Parse JSON string
+    ohlc_list = json.loads(json_data)
+    df = pd.DataFrame(ohlc_list)
+    df['time'] = pd.to_datetime(df['time'], unit='ms')
+
+    # Step 2: Plot using matplotlib
+    fig, ax = plt.subplots(figsize=(10, 5))
+    
+    for idx, row in df.iterrows():
+        color = 'green' if row['close'] >= row['open'] else 'red'
+        ax.add_patch(Rectangle(
+            (mdates.date2num(row['time']) - 0.2, min(row['open'], row['close'])),
+            0.4,
+            abs(row['close'] - row['open']),
+            color=color
+        ))
+        ax.vlines(mdates.date2num(row['time']),
+                  row['low'], row['high'],
+                  color=color, linewidth=1)
+
+    # Step 3: Format X-axis as dates
+    ax.xaxis_date()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    ax.xaxis.set_major_locator(mticker.MaxNLocator(10))
+    fig.autofmt_xdate()
+
+    ax.set_ylabel('Price')
+
+    # Step 4: Convert to base64
+    buf = BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+
+    return f"data:image/png;base64,{image_base64}"
+
 #####################################################################################
 #####################################################################################
 ##########################        API Methods:     ##################################
@@ -92,7 +142,8 @@ def get_token_price(
     # return get_token_historical_prices()
     try:
         json_data = get_cached_ohlc(symbol,period,limit)
-        return json_data
+
+        return generate_candlestick_base64(json_data)
     except Exception as e:
         return {"symbol":symbol, "period": period, "limit": limit, "error": str(e)}
 
