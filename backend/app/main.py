@@ -87,13 +87,14 @@ def run_backtest(
         period: Literal["month", "week", "day", "4hour", "hour", "15min", "5min"] = Query("day"),
         limit: int = Query(1000), 
         lookback: int = Query(90),
-        rebalance: int = Query(30)
+        rebalance: int = Query(30),
+        algorithm: Literal["mvo","hrp"] = Query("mvo")
 ):
     try:
         price_df = get_price_df(symbols, period, limit).set_index('time')
         time = price_df.index.to_list()
         bt = PfOptBacktest(price_df,lookback, rebalance)
-        equity_curve = bt.run('hrp')
+        equity_curve = bt.run(algorithm)
         performance = _compute_performance_metrics(equity_curve, time)
         return {"equity_curve": equity_curve.tolist(), "time": time, **performance}
     except Exception as e:
