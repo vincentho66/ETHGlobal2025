@@ -29,5 +29,5 @@ uvcion backend.app:main
 
 ## Screenshot
 
-![Screenshot from 2025-04-06 07-42-42](https://github.com/user-attachments/assets/c07f7bed-ab26-4039-ad13-5773b8a4ae26)
+![Screenshot from 2025-04-06 07-42-42](https://github.com/user-attachments/assets/c07f7bed-ab26-4039-ad13-5773b8a4ae26](https://imgur.com/a/wroEvUe)
 
