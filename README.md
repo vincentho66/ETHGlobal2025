@@ -2,11 +2,21 @@
 ## ETHGlobal 2025
 
 
-## Run 
+## Install  
 
+### Frontend
 ```
 npm run build
 npm start
+```
+
+### Backend
+```
+python3 -m venv .
+
+pip install -r requestments.txt
+
+uvcion backend.app:main
 ```
 
 
