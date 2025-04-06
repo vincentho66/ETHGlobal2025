@@ -1,5 +1,5 @@
-# ETHGlobal 2025
-
+# FOMO - Fully Optimized Management Operator
+## ETHGlobal 2025
 
 
 ## Run 
