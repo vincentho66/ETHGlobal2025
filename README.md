@@ -29,5 +29,4 @@ uvcion backend.app:main
 
 ## Screenshot
 
-![](https://imgur.com/a/wroEvUe)
-
+![v](https://i.imgur.com/U0VMUMi.png)
