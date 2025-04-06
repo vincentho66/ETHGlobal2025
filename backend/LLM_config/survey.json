@@ -1,0 +1,115 @@
+{
+  "questions": [
+    {
+      "id": "risk_level",
+      "question": "How would you feel if your portfolio dropped 20% in one day?",
+      "description": "This helps us understand your risk tolerance.",
+      "type": "slider",
+      "options": [
+        "I'd panic and sell everything",
+        "I'd be worried but wait it out",
+        "I'd stay calm and maybe buy more"
+      ]
+    },
+    {
+      "id": "horizon",
+      "question": "How long do you plan to keep this investment?",
+      "description": "Longer-term plans can handle more ups and downs.",
+      "type": "dropdown",
+      "options": [
+        "A few weeks",
+        "A few months",
+        "A few years",
+        "Long-term (even pass down to kids)"
+      ]
+    },
+    {
+      "id": "themes",
+      "question": "Which themes are you interested in?",
+      "description": "Choose token categories you believe in. You can select multiple.",
+      "type": "multi-select",
+      "options": [
+        {
+          "value": "eth",
+          "label": "ETH only",
+          "description": "Ethereum and ETH-based strategies."
+        },
+        {
+          "value": "defi",
+          "label": "DeFi Blue Chips",
+          "description": "Major decentralized finance protocols (Aave, Uniswap, etc)."
+        },
+        {
+          "value": "stablecoin",
+          "label": "Stablecoins",
+          "description": "Low-volatility assets pegged to fiat currencies."
+        },
+        {
+          "value": "l2",
+          "label": "Layer 2 Ecosystem",
+          "description": "Tokens from networks like Arbitrum, Optimism, zkSync, etc."
+        },
+        {
+          "value": "rwa",
+          "label": "Real-World Assets (RWA)",
+          "description": "Crypto tokens backed by real-world assets (e.g. US Treasuries)."
+        },
+        {
+          "value": "meme",
+          "label": "Meme Coins",
+          "description": "High-volatility, community-driven tokens like DOGE, PEPE."
+        },
+        {
+          "value": "any",
+          "label": "Open to anything",
+          "description": "No specific preference -- show me everything."
+        }
+      ]
+    },
+    {
+      "id": "exclusions",
+      "question": "Are there any types of assets you want to avoid?",
+      "description": "This helps us filter out assets you're not comfortable with.",
+      "type": "multi-select",
+      "options": [
+        {
+          "value": "volatile",
+          "label": "High Volatility",
+          "description": "Tokens that fluctuate wildly in price."
+        },
+        {
+          "value": "meme",
+          "label": "Meme Coins",
+          "description": "Speculative and community-driven tokens."
+        },
+        {
+          "value": "illiquid",
+          "label": "Illiquid Tokens",
+          "description": "Hard to trade or sell due to low volume."
+        },
+        {
+          "value": "manual",
+          "label": "Manually Enter Token List",
+          "description": "Let me hand-pick my own asset pool."
+        }
+      ]
+    },
+    {
+      "id": "experience",
+      "question": "How familiar are you with crypto investing?",
+      "description": "We'll tailor our suggestions based on your experience.",
+      "type": "dropdown",
+      "options": [
+        "I'm new",
+        "I've dabbled",
+        "I'm a pro"
+      ]
+    },
+    {
+      "id": "notes",
+      "question": "Anything else you'd like to share?",
+      "description": "Optional. This helps personalize your portfolio further.",
+      "type": "textarea"
+    }
+  ]
+}

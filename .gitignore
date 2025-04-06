@@ -1,10 +1,5 @@
 __pycache__/
-backend/bin/
-backend/include/
-backend/lib/
-backend/lib64/
-backend/pyvenv.cfg
-backend/share/
 .vscode/
 notebook/
-backend/.env
+.env
+slide.pdf
