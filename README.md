@@ -1,21 +1,20 @@
 # ETHGlobal 2025
 
-## Install 
+
+
+## Run 
 
 ```
-npm install
-npm install ethers@5
+npm run build
+npm start
 ```
 
-## Run in dev mode
 
-```
-npm run dev
-```
 
 ## View
-`http://localhost:5173/`
+`http://localhost:8000/`
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/91dfa2d7-87b7-4d0f-9f06-244ab3c1c519)
+![Screenshot from 2025-04-06 07-42-42](https://github.com/user-attachments/assets/c07f7bed-ab26-4039-ad13-5773b8a4ae26)
+

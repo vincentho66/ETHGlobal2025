@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  @apply bg-white dark:bg-gray-950 text-black; /* Added text-black here */
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+/* Welcome Component Styles */
+.welcome-header {
+  @apply bg-white p-6 shadow-md flex items-center justify-between;
+}
+
+.welcome-dropdown-container {
+  @apply flex justify-center mb-8;
+}
+
+.welcome-dropdown {
+  @apply border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.welcome-button-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6;
+}
+
+.welcome-button {
+  @apply bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-500;
+}
+
+.welcome-chart-section {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.welcome-chart-tab-container {
+  @apply flex space-x-4 mb-4 overflow-x-auto;
+}
+
+.welcome-chart-tab {
+  @apply px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.welcome-chart-tab-active {
+  @apply bg-blue-500 text-white;
+}
+
+.welcome-chart-tab-inactive {
+  @apply bg-gray-200 hover:bg-gray-300;
+}
+
+.welcome-chart-display {
+  @apply border border-gray-300 p-4 rounded;
+}
+
+.welcome-main {
+  @apply flex flex-col min-h-screen bg-gray-100;
+}
+
+.welcome-container {
+  @apply container mx-auto p-6 flex-grow;
+}
+
+/* New styles for chart and buttons */
+.welcome-chart-and-buttons {
+  @apply flex flex-col md:flex-row gap-6; /* Stack vertically on small screens, horizontally on medium and up */
+}
+
+.welcome-chart-area {
+  @apply relative w-full md:w-3/4; /* Take up 3/4 width on medium and up */
+  height: 0;
+  padding-bottom: 75%; /* 4:3 aspect ratio (3/4 = 75%) */
+}
+
+.welcome-chart-content {
+  @apply absolute top-0 left-0 w-full h-full;
+}
+
+.welcome-button-column {
+  @apply flex flex-col gap-4 md:w-1/4; /* Take up 1/4 width on medium and up */
+}
+
+/* Chat Modal Styles */
+.chat-modal {
+  @apply fixed bottom-8 right-8 z-50 w-96 bg-white rounded-lg shadow-lg flex flex-col;
+}
+
+.chat-header {
+  @apply p-4 border-b border-gray-300 flex items-center justify-between;
+}
+
+.chat-body {
+  @apply p-4 flex-grow overflow-y-auto;
+}
+
+.chat-message {
+  @apply mb-2 p-2 rounded-lg;
+}
+
+.chat-message-user {
+  @apply bg-blue-100 text-right;
+}
+
+.chat-message-assistant {
+  @apply bg-gray-100 text-left;
+}
+
+.chat-footer {
+  @apply p-4 border-t border-gray-300 flex;
+}
+
+.chat-input {
+  @apply flex-grow border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.chat-send-button {
+  @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.chat-open-button {
+  @apply fixed bottom-8 right-8 z-50 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+/* InputForm Styles */
+.input-form-container {
+  @apply p-6 bg-white rounded-lg shadow-md;
+}
