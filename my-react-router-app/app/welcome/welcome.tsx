@@ -105,7 +105,7 @@ export function Welcome() {
             const data = await fetchChartData(symbol, period, limit);
             setChartData([
                 {
-                    id: "token-price",
+                    id:     `${symbol} -price`,
                     title: `${symbol} Price`,
                     data: data,
                 },
@@ -219,9 +219,9 @@ export function Welcome() {
                                             {/* Chart Display Area */}
                                             <div className="welcome-chart-display">
                                                 {chartData?.map((chart) => {
-                                                    if (
-                                                        chart.id === activeChart
-                                                    ) {
+                                                    // if (
+                                                    //     chart.id === activeChart
+                                                    // ) {
                                                         return (                                                            
                                                             <div
                                                                 key={chart.id}
@@ -249,8 +249,8 @@ export function Welcome() {
                                                             </div>
                                                         );
                                                     }
-                                                    return null;
-                                                })}
+                                                    // return null;
+                                                )}
                                             </div>
                                         </>
                                     )}
